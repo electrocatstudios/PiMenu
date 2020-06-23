@@ -20,5 +20,17 @@
         "type": "data",
         "value": "IPADDRESS"
     },
-    "timeout": 0
+    "timeout": 0,
+    "touches": [
+        {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 480,
+            "command": {
+                "type": "menu",
+                "value": "second"
+            }
+        }
+    ]
 }

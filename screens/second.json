@@ -1,0 +1,26 @@
+{
+    "name": "second",
+    "Line1": {
+        "type": "text",
+        "value": "Second Screen"
+    },
+    "Line2": {
+        "type": "null",
+        "value": ""
+    },
+    "Line3": {
+        "type": "null",
+        "value": ""
+    },
+    "Line4": {
+        "type": "null",
+        "value": ""
+    },
+    "Line5": {
+        "type": "data",
+        "value": "TIME"
+    },
+    "timeout": 10,
+    "returnScreen": "main",
+    "touches": []
+}

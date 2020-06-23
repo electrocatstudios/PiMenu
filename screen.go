@@ -12,13 +12,15 @@ import (
 )
 
 type Screen struct {
-	Name    string      `json:"name"`
-	Line1   DisplayLine `json:"line1"`
-	Line2   DisplayLine `json:"line2"`
-	Line3   DisplayLine `json:"line3"`
-	Line4   DisplayLine `json:"line4"`
-	Line5   DisplayLine `json:"line5"`
-	Timeout int         `json:"timeout"`
+	Name         string         `json:"name"`
+	Line1        DisplayLine    `json:"line1"`
+	Line2        DisplayLine    `json:"line2"`
+	Line3        DisplayLine    `json:"line3"`
+	Line4        DisplayLine    `json:"line4"`
+	Line5        DisplayLine    `json:"line5"`
+	Timeout      int            `json:"timeout"`
+	ReturnScreen string         `json:"returnScreen"`
+	Touches      []TouchDetails `json:"touches"`
 }
 
 type ScreenDetails struct {
@@ -26,6 +28,19 @@ type ScreenDetails struct {
 	Height int
 	W2     openvg.VGfloat
 	Images map[string]image.Image
+}
+
+type TouchDetails struct {
+	X       int            `json:"x"`
+	Y       int            `json:"y"`
+	Width   int            `json:"width"`
+	Height  int            `json:"height"`
+	Command CommandDetails `json:"command"`
+}
+
+type CommandDetails struct {
+	Type  string `json:"type"`
+	Value string `json:"value"`
 }
 
 type DisplayLine struct {
