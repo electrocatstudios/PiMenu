@@ -12,15 +12,14 @@ import (
 )
 
 type Screen struct {
-	Name         string         `json:"name"`
-	Line1        DisplayLine    `json:"line1"`
-	Line2        DisplayLine    `json:"line2"`
-	Line3        DisplayLine    `json:"line3"`
-	Line4        DisplayLine    `json:"line4"`
-	Line5        DisplayLine    `json:"line5"`
-	Timeout      int            `json:"timeout"`
-	ReturnScreen string         `json:"returnScreen"`
-	Touches      []TouchDetails `json:"touches"`
+	Name    string         `json:"name"`
+	Line1   DisplayLine    `json:"line1"`
+	Line2   DisplayLine    `json:"line2"`
+	Line3   DisplayLine    `json:"line3"`
+	Line4   DisplayLine    `json:"line4"`
+	Line5   DisplayLine    `json:"line5"`
+	Timeout Timeout        `json:"timeout"`
+	Touches []TouchDetails `json:"touches"`
 }
 
 type ScreenDetails struct {
@@ -46,6 +45,12 @@ type CommandDetails struct {
 type DisplayLine struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
+}
+
+type Timeout struct {
+	Length        int    `json:"length"`
+	ReturnScreen  string `json:"returnScreen"`
+	ShowCountDown int    `json:"showCountDown"`
 }
 
 func GetScreenByName(name string) (Screen, error) {

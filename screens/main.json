@@ -20,7 +20,11 @@
         "type": "data",
         "value": "IPADDRESS"
     },
-    "timeout": 0,
+    "timeout": {
+        "length": 0,
+        "returnScreen": null,
+        "showCountdown": 0
+    },
     "touches": [
         {
             "x": 0,

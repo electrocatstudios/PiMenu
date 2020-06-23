@@ -20,7 +20,10 @@
         "type": "data",
         "value": "TIME"
     },
-    "timeout": 10,
-    "returnScreen": "main",
+    "timeout": {
+        "length": 10,
+        "returnScreen": "main",
+        "showCountDown": 5
+    },
     "touches": []
 }

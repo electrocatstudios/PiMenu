@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/ajstarks/openvg"
@@ -28,18 +29,28 @@ func HandleTouches(t *TouchScreen, input Screen, defaultScreen string) string {
 		return defaultScreen
 	}
 	if numTouches < 1 {
-		if input.Timeout == 0 {
+		if input.Timeout.Length == 0 {
 			// We don't have a time out so just return
 			return defaultScreen
 		}
 
+		// See if we have timed out since last touch
 		curTime := time.Now()
 		diff := curTime.Sub(t.LastScreenChange).Seconds()
 
-		remain := input.Timeout - int(diff)
+		remain := input.Timeout.Length - int(diff)
+
 		if int(remain) < 0 {
 			// We have timed out so return to previous screen
-			return input.ReturnScreen
+			return input.Timeout.ReturnScreen
+		}
+
+		if remain < input.Timeout.ShowCountDown {
+			seconds_remain := strconv.FormatInt(int64(remain), 10)
+			seconds_remain += "s"
+
+			openvg.Text(10, 420, seconds_remain, "sans", 30)
+
 		}
 		return defaultScreen
 	}
@@ -77,9 +88,9 @@ func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) stri
 	DrawTextLine(s, input.Line4, 160)
 	DrawTextLine(s, input.Line5, 80)
 
-	openvg.End() // End the picture
-
 	ret := HandleTouches(t, input, name)
+
+	openvg.End()
 
 	return ret
 }
