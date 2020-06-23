@@ -1,0 +1,24 @@
+{
+    "name": "main",
+    "Line1": {
+        "type": "text",
+        "value": "Example Text On Screen"
+    },
+    "Line2": {
+        "type": "text",
+        "value": "Some more text"
+    },
+    "Line3": {
+        "type": "data",
+        "value": "TIME"
+    },
+    "Line4": {
+        "type": "null",
+        "value": "<Ignored>"
+    },
+    "Line5": {
+        "type": "data",
+        "value": "IPADDRESS"
+    },
+    "timeout": 0
+}
