@@ -7,6 +7,8 @@ import (
 	"image"
 	"io/ioutil"
 	"os"
+	"sync"
+	"time"
 
 	"github.com/ajstarks/openvg"
 )
@@ -51,6 +53,12 @@ type Timeout struct {
 	Length        int    `json:"length"`
 	ReturnScreen  string `json:"returnScreen"`
 	ShowCountDown int    `json:"showCountDown"`
+}
+
+type InterruptScreen struct {
+	Screens   []Screen
+	Lock      sync.Mutex
+	LastShown time.Time
 }
 
 func GetScreenByName(name string) (Screen, error) {

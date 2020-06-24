@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package screenservice;
+
+message ScreenRequest {
+  string line1 = 1;
+  string line2 = 2;
+  string line3 = 3;
+  string line4 = 4;
+  string line5 = 5;
+
+    message Timeout {
+        string returnScreen = 1;
+        int32 length = 2;
+        int32 showCountdown = 3;
+    }
+}
+
+message ScreenResponse {
+    string status = 1;
+    string message = 2;
+}
+
+service ScreenServer {
+  rpc (ScreenRequest) returns (SendScreen) {}
+}

@@ -10,6 +10,8 @@ import (
 
 var cur_screen = "main"
 
+var interruptScreen InterruptScreen
+
 func DrawTextLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	if dl.Type == "null" {
 		// Nothing to do here - just leave blank
@@ -106,6 +108,24 @@ func main() {
 	t.Init()
 
 	for {
+		interruptScreen.Lock.Lock()
+		if len(interruptScreen.Screens) > 0 {
+			DrawScreen(&t, interruptScreen.Screens[0].Name, interruptScreen.Screens[0], screenDetails)
+			curTime := time.Now()
+			diff := curTime.Sub(interruptScreen.LastShown).Seconds()
+			if diff > interruptScreen.Screens[0].Timeout.Length {
+				// if len(interruptScreen.Screens) > 1 {
+				interruptScreen.Screens = interruptScreen.Screens[1:]
+				interruptScreen.LastShown = time.Now()
+				// }else{
+				// 	interruptScreen.Screens = []Screen
+				// }
+			}
+			interruptScreen.Lock.Unlock()
+			return
+		}
+		interruptScreen.Lock.Unlock()
+
 		screen, err := GetScreenByName(cur_screen)
 		if err != nil {
 			panic(err)
