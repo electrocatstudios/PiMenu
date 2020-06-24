@@ -12,6 +12,7 @@ sudo apt-get install libraspberrypi-dev raspberrypi-kernel-headers -y
 Then install the dependencies
 
 ```
+go get golang.org/x/exp/io/i2c
 go get github.com/ajstarks/openvg
 ```
 
