@@ -53,6 +53,7 @@ type Timeout struct {
 	ShowCountDown int    `json:"showCountDown"`
 }
 
+// Load in the screen data from json file
 func GetScreenByName(name string) (Screen, error) {
 	var ret Screen
 	filename := fmt.Sprintf("screens/%s.json", name)
