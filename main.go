@@ -2,10 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net"
 	"strconv"
 	"time"
 
 	"github.com/ajstarks/openvg"
+	"github.com/electrocatstudios/PiMenu/screenservice"
+	"google.golang.org/grpc"
 )
 
 var cur_screen = "main"
@@ -13,7 +17,7 @@ var cur_screen = "main"
 var interruptScreen InterruptScreen
 
 func DrawTextLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
-	if dl.Type == "null" {
+	if dl.Type == "null" || dl.Type == "" {
 		// Nothing to do here - just leave blank
 		return
 	} else if dl.Type == "text" {
@@ -80,6 +84,7 @@ func HandleTouches(t *TouchScreen, input Screen, defaultScreen string) string {
 
 /*return new screen based on touches if appropriate*/
 func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) string {
+	// fmt.Println(input)
 	openvg.Start(s.Width, s.Height)      // Start the picture
 	openvg.BackgroundColor("black")      // Black background
 	openvg.FillColor("rgb(255,255,255)") // White text
@@ -90,11 +95,28 @@ func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) stri
 	DrawTextLine(s, input.Line4, 160)
 	DrawTextLine(s, input.Line5, 80)
 
-	ret := HandleTouches(t, input, name)
+	var ret string
+	ret = HandleTouches(t, input, name)
 
 	openvg.End()
 
 	return ret
+}
+
+func runInterruptServer() {
+	// gprcAddress := "localhost:7777"
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 7777))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	} // create a server instance
+	s := screenservice.Server{} // create a gRPC server object
+	grpcServer := grpc.NewServer()
+	screenservice.RegisterScreenServerServer(grpcServer, &s)
+
+	// start the server
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %s", err)
+	}
 }
 
 func main() {
@@ -107,24 +129,36 @@ func main() {
 	t := TouchScreen{nil, false, time.Now()}
 	t.Init()
 
+	// // Test interrupt screen
+	// testTimeout := Timeout{Length: 10}
+	// testScreen := Screen{Name: "Test screen", Line1: DisplayLine{Type: "text", Value: "Test Screen show"}, Timeout: testTimeout}
+
+	// interruptScreen.Screens = append(interruptScreen.Screens, testScreen)
+	// interruptScreen.LastShown = time.Now()
+	// // end test#
+	go runInterruptServer()
+
 	for {
+		bFoundInterrupt := false
 		interruptScreen.Lock.Lock()
 		if len(interruptScreen.Screens) > 0 {
-			DrawScreen(&t, interruptScreen.Screens[0].Name, interruptScreen.Screens[0], screenDetails)
+			bFoundInterrupt = true
+
+			DrawScreen(&t, "interrupt", interruptScreen.Screens[0], screenDetails)
 			curTime := time.Now()
+
 			diff := curTime.Sub(interruptScreen.LastShown).Seconds()
-			if diff > interruptScreen.Screens[0].Timeout.Length {
-				// if len(interruptScreen.Screens) > 1 {
+
+			if int(diff) > interruptScreen.Screens[0].Timeout.Length {
 				interruptScreen.Screens = interruptScreen.Screens[1:]
 				interruptScreen.LastShown = time.Now()
-				// }else{
-				// 	interruptScreen.Screens = []Screen
-				// }
 			}
-			interruptScreen.Lock.Unlock()
-			return
 		}
+
 		interruptScreen.Lock.Unlock()
+		if bFoundInterrupt {
+			continue
+		}
 
 		screen, err := GetScreenByName(cur_screen)
 		if err != nil {

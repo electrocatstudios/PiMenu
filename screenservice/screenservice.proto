@@ -22,5 +22,5 @@ message ScreenResponse {
 }
 
 service ScreenServer {
-  rpc (ScreenRequest) returns (SendScreen) {}
+  rpc SendScreen(ScreenRequest) returns (ScreenResponse) {}
 }
