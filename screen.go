@@ -61,6 +61,7 @@ type InterruptScreen struct {
 	LastShown time.Time
 }
 
+// Load in the screen data from json file
 func GetScreenByName(name string) (Screen, error) {
 	var ret Screen
 	filename := fmt.Sprintf("screens/%s.json", name)
