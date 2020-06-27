@@ -8,12 +8,9 @@ message ScreenRequest {
   string line3 = 3;
   string line4 = 4;
   string line5 = 5;
-
-    message Timeout {
-        string returnScreen = 1;
-        int32 length = 2;
-        int32 showCountdown = 3;
-    }
+  string returnScreen = 6;
+  int32 length = 7;
+  int32 showCountdown = 8;
 }
 
 message ScreenResponse {

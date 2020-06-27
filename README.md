@@ -5,8 +5,10 @@ Make Raspberry Pi Menus easily to display on a screen. Note: This needs to be co
 You'll need to install the following prerequisites before getting the OpenVG library
 
 ```
-sudo apt-get install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core -y
-sudo apt-get install libraspberrypi-dev raspberrypi-kernel-headers -y
+sudo apt install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core -y
+sudo apt install libraspberrypi-dev raspberrypi-kernel-headers -y
+sudo apt install golang-google-grpc-dev -y
+sudo apt install python3-grpcio python3-grpc-tools python3-protobuf -y
 ```
 
 Then install the dependencies
@@ -14,6 +16,9 @@ Then install the dependencies
 ```
 go get golang.org/x/exp/io/i2c
 go get github.com/ajstarks/openvg
+go get github.com/golang/protobuf/proto
+go get golang.org/x/net/context
+go get google.golang.org/grpc
 ```
 
 ## Setting up a custom screen

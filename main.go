@@ -103,14 +103,39 @@ func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) stri
 	return ret
 }
 
+func monitorService(s *screenservice.Server) {
+	for {
+		if s.NumScreens() != 0 {
+			fmt.Println("Found screen")
+			screen := s.GetScreen()
+			var newScreen Screen
+			newScreen.Line1 = DisplayLine{Type: "text", Value: screen.Line1}
+			newScreen.Line2 = DisplayLine{Type: "text", Value: screen.Line2}
+			newScreen.Line3 = DisplayLine{Type: "text", Value: screen.Line3}
+			newScreen.Line4 = DisplayLine{Type: "text", Value: screen.Line4}
+			newScreen.Line5 = DisplayLine{Type: "text", Value: screen.Line5}
+			newScreen.Timeout = Timeout{Length: int(screen.Length), ShowCountDown: int(screen.ShowCountdown)}
+			interruptScreen.Lock.Lock()
+			if len(interruptScreen.Screens) == 0 {
+				interruptScreen.LastShown = time.Now()
+			}
+			interruptScreen.Screens = append(interruptScreen.Screens, newScreen)
+			interruptScreen.Lock.Unlock()
+		}
+		time.Sleep(1 * time.Second)
+	}
+}
+
 func runInterruptServer() {
-	// gprcAddress := "localhost:7777"
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 7777))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	} // create a server instance
 	s := screenservice.Server{} // create a gRPC server object
 	grpcServer := grpc.NewServer()
+
+	go monitorService(&s)
+
 	screenservice.RegisterScreenServerServer(grpcServer, &s)
 
 	// start the server
@@ -129,18 +154,13 @@ func main() {
 	t := TouchScreen{nil, false, time.Now()}
 	t.Init()
 
-	// // Test interrupt screen
-	// testTimeout := Timeout{Length: 10}
-	// testScreen := Screen{Name: "Test screen", Line1: DisplayLine{Type: "text", Value: "Test Screen show"}, Timeout: testTimeout}
-
-	// interruptScreen.Screens = append(interruptScreen.Screens, testScreen)
-	// interruptScreen.LastShown = time.Now()
-	// // end test#
 	go runInterruptServer()
 
+	fmt.Println("Starting main loop")
 	for {
 		bFoundInterrupt := false
 		interruptScreen.Lock.Lock()
+
 		if len(interruptScreen.Screens) > 0 {
 			bFoundInterrupt = true
 
