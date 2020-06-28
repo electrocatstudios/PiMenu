@@ -32,12 +32,31 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 			fmt.Println(err)
 			return
 		}
-		image_file, err := imageCache.GetImage(img.Filename)
+
+		force_height := s.Height
+		if img.Height != 0 {
+			force_height = img.Height
+		}
+
+		image_file, err := imageCache.GetImage(img.Filename, 0, force_height)
+
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		openvg.Img(openvg.VGfloat(img.X), openvg.VGfloat(img.Y), *image_file)
+		left := openvg.VGfloat(0)
+		top := openvg.VGfloat(img.Y)
+
+		if img.X != 0 {
+			// We aren't centering this one - use given x val
+			left = openvg.VGfloat(img.X)
+		} else {
+			// Center the image
+			image_width := openvg.VGfloat(image_file.Bounds().Max.X)
+			left = openvg.VGfloat(s.W2 - (image_width / 2))
+		}
+
+		openvg.Img(left, top, image_file)
 	}
 }
 
@@ -60,6 +79,7 @@ func HandleTouches(t *TouchScreen, input Screen, defaultScreen string) string {
 		remain := input.Timeout.Length - int(diff)
 
 		if int(remain) < 0 {
+			t.LastScreenChange = time.Now()
 			// We have timed out so return to previous screen
 			return input.Timeout.ReturnScreen
 		}
@@ -116,6 +136,7 @@ func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) stri
 }
 
 func monitorService(s *screenservice.Server) {
+	// Listen for incoming screens on the buffer
 	for {
 		if s.NumScreens() != 0 {
 			fmt.Println("Found screen")
@@ -142,8 +163,9 @@ func runInterruptServer() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 7777))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
-	} // create a server instance
-	s := screenservice.Server{} // create a gRPC server object
+	}
+
+	s := screenservice.Server{}
 	grpcServer := grpc.NewServer()
 
 	go monitorService(&s)
@@ -168,7 +190,6 @@ func main() {
 
 	go runInterruptServer()
 
-	fmt.Println("Starting main loop")
 	for {
 		bFoundInterrupt := false
 		interruptScreen.Lock.Lock()

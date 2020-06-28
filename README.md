@@ -19,6 +19,7 @@ go get github.com/ajstarks/openvg
 go get github.com/golang/protobuf/proto
 go get golang.org/x/net/context
 go get google.golang.org/grpc
+go get github.com/nfnt/resize
 ```
 ## Setting up a Python Client
 

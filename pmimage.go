@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"image"
 	"os"
+
+	"github.com/nfnt/resize"
 )
 
 type PMImageCache struct {
-	Images map[string]*image.Image
+	Images map[string]image.Image
 }
 
-func (imgCache *PMImageCache) LoadImage(fn string) error {
+func (imgCache *PMImageCache) LoadImage(fn string, width int, height int) error {
 	filename := fmt.Sprintf("images/%s", fn)
 
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
@@ -33,20 +35,22 @@ func (imgCache *PMImageCache) LoadImage(fn string) error {
 		return err
 	}
 
+	tmpImage = resize.Resize(uint(width), uint(height), tmpImage, resize.Lanczos3)
+
 	if imgCache.Images == nil {
-		imgCache.Images = make(map[string]*image.Image)
+		imgCache.Images = make(map[string]image.Image)
 	}
 
-	imgCache.Images[fn] = &tmpImage
+	imgCache.Images[fn] = tmpImage
 	return nil
 }
 
-func (imgCache *PMImageCache) GetImage(imageName string) (*image.Image, error) {
+func (imgCache *PMImageCache) GetImage(imageName string, width int, height int) (image.Image, error) {
 	if _, ok := imgCache.Images[imageName]; ok {
 		return imgCache.Images[imageName], nil
 	}
 
-	err := imgCache.LoadImage(imageName)
+	err := imgCache.LoadImage(imageName, width, height)
 	if err != nil {
 		return nil, err
 	}
