@@ -13,10 +13,10 @@ import (
 )
 
 var cur_screen = "main"
-
+var imageCache PMImageCache
 var interruptScreen InterruptScreen
 
-func DrawTextLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
+func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	if dl.Type == "null" || dl.Type == "" {
 		// Nothing to do here - just leave blank
 		return
@@ -25,6 +25,19 @@ func DrawTextLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	} else if dl.Type == "data" {
 		dataString := GetDataString(dl.Value)
 		openvg.TextMid(s.W2, offset, dataString, "sans", 30)
+	} else if dl.Type == "image" {
+		img, err := GetImageFromString(dl.Value)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		image_file, err := imageCache.GetImage(img.Filename)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		openvg.Img(openvg.VGfloat(img.X), openvg.VGfloat(img.Y), *image_file)
 	}
 }
 
@@ -84,16 +97,15 @@ func HandleTouches(t *TouchScreen, input Screen, defaultScreen string) string {
 
 /*return new screen based on touches if appropriate*/
 func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) string {
-	// fmt.Println(input)
+
 	openvg.Start(s.Width, s.Height)      // Start the picture
 	openvg.BackgroundColor("black")      // Black background
 	openvg.FillColor("rgb(255,255,255)") // White text
-
-	DrawTextLine(s, input.Line1, 400)
-	DrawTextLine(s, input.Line2, 320)
-	DrawTextLine(s, input.Line3, 240)
-	DrawTextLine(s, input.Line4, 160)
-	DrawTextLine(s, input.Line5, 80)
+	DrawLine(s, input.Line1, 400)
+	DrawLine(s, input.Line2, 320)
+	DrawLine(s, input.Line3, 240)
+	DrawLine(s, input.Line4, 160)
+	DrawLine(s, input.Line5, 80)
 
 	var ret string
 	ret = HandleTouches(t, input, name)

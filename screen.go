@@ -7,6 +7,8 @@ import (
 	"image"
 	"io/ioutil"
 	"os"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -61,6 +63,14 @@ type InterruptScreen struct {
 	LastShown time.Time
 }
 
+type PMImage struct {
+	X        int
+	Y        int
+	Width    int
+	Height   int
+	Filename string
+}
+
 // Load in the screen data from json file
 func GetScreenByName(name string) (Screen, error) {
 	var ret Screen
@@ -78,5 +88,37 @@ func GetScreenByName(name string) (Screen, error) {
 		return ret, err
 	}
 
+	return ret, nil
+}
+
+func GetImageFromString(input string) (PMImage, error) {
+	ret := PMImage{}
+	pieceArray := strings.Split(input, ";")
+	if len(pieceArray) < 5 || len(pieceArray) > 5 {
+		errString := fmt.Sprintf("Incorrect number of items in image string expected 5 but got %d", len(pieceArray))
+		err := errors.New(errString)
+		return ret, err
+	}
+	x, err := strconv.Atoi(pieceArray[0])
+	if err != nil {
+		return ret, err
+	}
+	y, err := strconv.Atoi(pieceArray[1])
+	if err != nil {
+		return ret, err
+	}
+	width, err := strconv.Atoi(pieceArray[2])
+	if err != nil {
+		return ret, err
+	}
+	height, err := strconv.Atoi(pieceArray[3])
+	if err != nil {
+		return ret, err
+	}
+	ret.X = x
+	ret.Y = y
+	ret.Width = width
+	ret.Height = height
+	ret.Filename = pieceArray[4]
 	return ret, nil
 }
