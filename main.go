@@ -57,6 +57,26 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 		}
 
 		openvg.Img(left, top, image_file)
+	} else if dl.Type == "gif" {
+		img, err := GetImageFromString(dl.Value)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		frame, err := imageCache.GetGifFrame(img.Filename, s)
+		// Center the gif
+		left := s.W2 - openvg.VGfloat((frame.Bounds().Max.X / 2))
+		top := openvg.VGfloat((s.Height / 2) - (frame.Bounds().Max.Y / 2))
+
+		if img.X != 0 {
+			left = openvg.VGfloat(img.X)
+		}
+		if img.Y != 0 {
+			top = openvg.VGfloat(img.Y)
+		}
+
+		openvg.Img(left, top, frame)
 	}
 }
 

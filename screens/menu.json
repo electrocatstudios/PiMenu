@@ -5,8 +5,8 @@
         "value": "110;210;100;100;icons/information.png"
     },
     "Line2": {
-        "type": "null",
-        "value": ""
+        "type": "image",
+        "value": "400;210;100;100;icons/target.png"
     },
     "Line3": {
         "type": "null",
@@ -25,14 +25,26 @@
         "returnScreen": "main",
         "showCountDown": 5
     },
-    "touches": [{
-        "x": 30,
-        "y": 200,
-        "width": 145,
-        "height": 150,
-        "command": {
-            "type": "menu",
-            "value": "photo1"
+    "touches": [
+        {
+            "x": 30,
+            "y": 200,
+            "width": 145,
+            "height": 150,
+            "command": {
+                "type": "menu",
+                "value": "photo1"
+            }
+        },
+        {
+            "x": 30,
+            "y": 20,
+            "width": 145,
+            "height": 150,
+            "command": {
+                "type": "menu",
+                "value": "giftest"
+            }
         }
-    }]
+    ]   
 }

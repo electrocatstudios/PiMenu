@@ -1,0 +1,40 @@
+{
+    "name": "giftest",
+    "Line1": {
+        "type": "gif",
+        "value": "0;0;0;0;gifs/cat.gif"
+    },
+    "Line2": {
+        "type": "null",
+        "value": ""
+    },
+    "Line3": {
+        "type": "null",
+        "value": ""
+    },
+    "Line4": {
+        "type": "null",
+        "value": ""
+    },
+    "Line5": {
+        "type": "null",
+        "value": ""
+    },
+    "timeout": {
+        "length": 10,
+        "returnScreen": "menu",
+        "showCountDown": 5
+    },
+    "touches": [ 
+        {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 480,
+            "command": {
+                "type": "menu",
+                "value": "menu"
+            }
+        }
+    ]
+}
