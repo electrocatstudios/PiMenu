@@ -1,8 +1,6 @@
 package screenservice
 
 import (
-	fmt "fmt"
-
 	"golang.org/x/net/context"
 )
 
@@ -11,8 +9,7 @@ type Server struct{}
 var IncomingScreens []ScreenRequest
 
 func (s *Server) SendScreen(ctx context.Context, in *ScreenRequest) (*ScreenResponse, error) {
-	fmt.Println("Got a new screen in")
-	fmt.Println(in.Line1)
+
 	var newScreen ScreenRequest
 	newScreen.Line1 = in.Line1
 	newScreen.Line2 = in.Line2
@@ -23,8 +20,6 @@ func (s *Server) SendScreen(ctx context.Context, in *ScreenRequest) (*ScreenResp
 	newScreen.ShowCountdown = in.ShowCountdown
 
 	IncomingScreens = append(IncomingScreens, newScreen)
-
-	fmt.Printf("%d screens in list\n", len(IncomingScreens))
 
 	return &ScreenResponse{Status: "ok"}, nil
 }
