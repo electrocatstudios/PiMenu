@@ -9,6 +9,7 @@ sudo apt install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core -y
 sudo apt install libraspberrypi-dev raspberrypi-kernel-headers -y
 sudo apt install golang-google-grpc-dev -y
 sudo apt install python3-grpcio python3-grpc-tools python3-protobuf -y
+sudo apt install -y libavdevice-dev libavfilter-dev libswscale-dev libavcodec-dev libavformat-dev libswresample-dev libavutil-dev
 ```
 
 Then install the dependencies
@@ -20,6 +21,10 @@ go get github.com/golang/protobuf/proto
 go get golang.org/x/net/context
 go get google.golang.org/grpc
 go get github.com/nfnt/resize
+
+go get github.com/giorgisio/goav/avcodec
+go get github.com/giorgisio/goav/avformat
+go get github.com/giorgisio/goav/avutil
 ```
 ## Setting up a Python Client
 

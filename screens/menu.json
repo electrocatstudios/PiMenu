@@ -43,7 +43,7 @@
             "height": 150,
             "command": {
                 "type": "menu",
-                "value": "giftest"
+                "value": "incomingimage"
             }
         }
     ]   

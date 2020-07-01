@@ -58,9 +58,11 @@ type Timeout struct {
 }
 
 type InterruptScreen struct {
-	Screens   []Screen
-	Lock      sync.Mutex
-	LastShown time.Time
+	Screens       []Screen
+	RecentFrame   *image.Image
+	IncomingImage *image.Image
+	Lock          sync.Mutex
+	LastShown     time.Time
 }
 
 type PMImage struct {
