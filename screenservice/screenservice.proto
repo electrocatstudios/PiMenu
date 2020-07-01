@@ -2,15 +2,38 @@ syntax = "proto3";
 
 package screenservice;
 
+message Line {
+  string line_type = 1;
+  string line_value = 2;
+}
+
+message Timeout {
+  int32 length = 1;
+  int32 showtimeout = 2;
+  string returnscreen = 3;
+}
+
+message Command {
+  string commandtype = 1;
+  string commandvalue = 2;
+}
+
+message Touch {
+  int32 x = 1;
+  int32 y = 2;
+  int32 width = 3;
+  int32 height = 4;
+  Command command = 5;
+}
+
 message ScreenRequest {
-  string line1 = 1;
-  string line2 = 2;
-  string line3 = 3;
-  string line4 = 4;
-  string line5 = 5;
-  string returnScreen = 6;
-  int32 length = 7;
-  int32 showCountdown = 8;
+  Line line1 = 1;
+  Line line2 = 2;
+  Line line3 = 3;
+  Line line4 = 4;
+  Line line5 = 5;
+  Timeout timeout = 6;
+  repeated Touch touches=7;
 }
 
 message ScreenResponse {
@@ -18,6 +41,14 @@ message ScreenResponse {
     string message = 2;
 }
 
+message ScreenImage {
+  bytes image_data = 1;
+  int32 height = 2;
+  int32 width = 3;
+  int64 frame = 4;
+}
+
 service ScreenServer {
   rpc SendScreen(ScreenRequest) returns (ScreenResponse) {}
+  rpc SendImage(ScreenImage) returns (ScreenResponse) {}
 }

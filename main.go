@@ -162,17 +162,54 @@ func monitorService(s *screenservice.Server) {
 			fmt.Println("Found screen")
 			screen := s.GetScreen()
 			var newScreen Screen
-			newScreen.Line1 = DisplayLine{Type: "text", Value: screen.Line1}
-			newScreen.Line2 = DisplayLine{Type: "text", Value: screen.Line2}
-			newScreen.Line3 = DisplayLine{Type: "text", Value: screen.Line3}
-			newScreen.Line4 = DisplayLine{Type: "text", Value: screen.Line4}
-			newScreen.Line5 = DisplayLine{Type: "text", Value: screen.Line5}
-			newScreen.Timeout = Timeout{Length: int(screen.Length), ShowCountDown: int(screen.ShowCountdown)}
+			if screen.Line1 != nil {
+				newScreen.Line1 = DisplayLine{Type: screen.Line1.LineType, Value: screen.Line1.LineValue}
+			}
+
+			if screen.Line2 != nil {
+				newScreen.Line2 = DisplayLine{Type: screen.Line2.LineType, Value: screen.Line2.LineValue}
+			}
+
+			if screen.Line3 != nil {
+				newScreen.Line3 = DisplayLine{Type: screen.Line3.LineType, Value: screen.Line3.LineValue}
+			}
+
+			if screen.Line4 != nil {
+				newScreen.Line4 = DisplayLine{Type: screen.Line4.LineType, Value: screen.Line4.LineValue}
+			}
+
+			if screen.Line5 != nil {
+				newScreen.Line5 = DisplayLine{Type: screen.Line5.LineType, Value: screen.Line5.LineValue}
+			}
+
+			if screen.Timeout != nil {
+				newScreen.Timeout = Timeout{Length: int(screen.Timeout.Length), ShowCountDown: int(screen.Timeout.Showtimeout), ReturnScreen: screen.Timeout.Returnscreen}
+			}
+
+			if screen.Touches != nil {
+				for _, touch := range screen.Touches {
+					var newCommand CommandDetails
+					newCommand.Type = touch.Command.Commandtype
+					newCommand.Value = touch.Command.Commandvalue
+
+					newScreen.Touches = append(newScreen.Touches, TouchDetails{X: int(touch.X), Y: int(touch.Y), Width: int(touch.Width), Height: int(touch.Height), Command: newCommand})
+				}
+			}
+
 			interruptScreen.Lock.Lock()
 			if len(interruptScreen.Screens) == 0 {
 				interruptScreen.LastShown = time.Now()
 			}
 			interruptScreen.Screens = append(interruptScreen.Screens, newScreen)
+			interruptScreen.Lock.Unlock()
+		}
+
+		if s.HasImage() {
+			img := s.GetImage()
+			interruptScreen.Lock.Lock()
+
+			interruptScreen.IncomingImage = img
+
 			interruptScreen.Lock.Unlock()
 		}
 		time.Sleep(1 * time.Second)

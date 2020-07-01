@@ -19,6 +19,11 @@ class ScreenServerStub(object):
         request_serializer=screenservice__pb2.ScreenRequest.SerializeToString,
         response_deserializer=screenservice__pb2.ScreenResponse.FromString,
         )
+    self.SendImage = channel.unary_unary(
+        '/screenservice.ScreenServer/SendImage',
+        request_serializer=screenservice__pb2.ScreenImage.SerializeToString,
+        response_deserializer=screenservice__pb2.ScreenResponse.FromString,
+        )
 
 
 class ScreenServerServicer(object):
@@ -32,12 +37,24 @@ class ScreenServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def SendImage(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_ScreenServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'SendScreen': grpc.unary_unary_rpc_method_handler(
           servicer.SendScreen,
           request_deserializer=screenservice__pb2.ScreenRequest.FromString,
+          response_serializer=screenservice__pb2.ScreenResponse.SerializeToString,
+      ),
+      'SendImage': grpc.unary_unary_rpc_method_handler(
+          servicer.SendImage,
+          request_deserializer=screenservice__pb2.ScreenImage.FromString,
           response_serializer=screenservice__pb2.ScreenResponse.SerializeToString,
       ),
   }
