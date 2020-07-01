@@ -24,10 +24,13 @@ func (s *Server) SendScreen(ctx context.Context, in *ScreenRequest) (*ScreenResp
 }
 
 func (s *Server) SendImage(ctx context.Context, in *ScreenImage) (*ScreenResponse, error) {
+
 	img, _, _ := image.Decode(bytes.NewReader(in.ImageData))
+
 	IncomingImage.Lock.Lock()
 	IncomingImage.Image = &img
 	IncomingImage.Lock.Unlock()
+
 	return &ScreenResponse{Status: "ok"}, nil
 }
 
@@ -57,8 +60,15 @@ func (s *Server) HasImage() bool {
 
 func (s *Server) GetImage() *image.Image {
 	IncomingImage.Lock.Lock()
+
 	ret := IncomingImage.Image
-	IncomingImage.Image = nil
+
 	IncomingImage.Lock.Unlock()
 	return ret
+}
+
+func (s *Server) RemoveImage() {
+	IncomingImage.Lock.Lock()
+	IncomingImage.Image = nil
+	IncomingImage.Lock.Unlock()
 }

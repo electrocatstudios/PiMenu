@@ -1,0 +1,40 @@
+{
+    "name": "giftest",
+    "Line1": {
+        "type": "data",
+        "value": "IMAGESERVER"
+    },
+    "Line2": {
+        "type": "null",
+        "value": ""
+    },
+    "Line3": {
+        "type": "null",
+        "value": ""
+    },
+    "Line4": {
+        "type": "null",
+        "value": ""
+    },
+    "Line5": {
+        "type": "null",
+        "value": ""
+    },
+    "timeout": {
+        "length": 0,
+        "returnScreen": "",
+        "showCountDown": 0
+    },
+    "touches": [ 
+        {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 480,
+            "command": {
+                "type": "menu",
+                "value": "menu"
+            }
+        }
+    ]
+}

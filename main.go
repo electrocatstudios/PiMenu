@@ -23,8 +23,24 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	} else if dl.Type == "text" {
 		openvg.TextMid(s.W2, offset, dl.Value, "sans", 30)
 	} else if dl.Type == "data" {
-		dataString := GetDataString(dl.Value)
-		openvg.TextMid(s.W2, offset, dataString, "sans", 30)
+		if dl.Value == "IMAGESERVER" {
+			interruptScreen.Lock.Lock()
+			if interruptScreen.IncomingImage != nil {
+
+				img := (*interruptScreen.IncomingImage)
+
+				left := openvg.VGfloat(0)
+				top := openvg.VGfloat(0)
+
+				openvg.Img(left, top, img)
+			} else {
+				openvg.TextMid(s.W2, 200, "No Image available", "sans", 30)
+			}
+			interruptScreen.Lock.Unlock()
+		} else {
+			dataString := GetDataString(dl.Value)
+			openvg.TextMid(s.W2, offset, dataString, "sans", 30)
+		}
 	} else if dl.Type == "image" {
 		img, err := GetImageFromString(dl.Value)
 
@@ -206,13 +222,13 @@ func monitorService(s *screenservice.Server) {
 
 		if s.HasImage() {
 			img := s.GetImage()
+
 			interruptScreen.Lock.Lock()
-
 			interruptScreen.IncomingImage = img
-
 			interruptScreen.Lock.Unlock()
+			s.RemoveImage()
 		}
-		time.Sleep(1 * time.Second)
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 
@@ -247,6 +263,10 @@ func main() {
 
 	go runInterruptServer()
 
+	var prevscreen string
+	var screen Screen
+	var err error
+
 	for {
 		bFoundInterrupt := false
 		interruptScreen.Lock.Lock()
@@ -270,10 +290,17 @@ func main() {
 			continue
 		}
 
-		screen, err := GetScreenByName(cur_screen)
-		if err != nil {
-			panic(err)
+		if cur_screen != prevscreen {
+
+			screen, err = GetScreenByName(cur_screen)
+			if err != nil {
+				panic(err)
+			}
+			prevscreen = cur_screen
 		}
+
 		cur_screen = DrawScreen(&t, cur_screen, screen, screenDetails)
+
+		time.Sleep(5 * time.Millisecond)
 	}
 }
