@@ -1,6 +1,9 @@
 # PiMenu
 Make Raspberry Pi Menus easily to display on a screen. Note: This needs to be compiled on a Raspberry Pi due to the libraries not being available for use on other systems. If anyone knows how to install them on different operating systems to allow cross-compilation then please get in touch. 
 
+## Running the application
+In the release folder you will find a binary (called Menecs) which is the main application. You'll need to customise the json files in the screens folder (and the folder will need to be next to the binary, along with the images folder). You'll also need to install and run the fbcp application https://github.com/juj/fbcp-ili9341. Every time a screen is changed the json file is reread so you can hot-swap json files. 
+
 ## Prerequisites for development
 You'll need to install the following prerequisites before getting the OpenVG library
 
@@ -25,6 +28,8 @@ go get github.com/nfnt/resize
 go get github.com/giorgisio/goav/avcodec
 go get github.com/giorgisio/goav/avformat
 go get github.com/giorgisio/goav/avutil
+
+go get github.com/electrocatstudios/FTXXXX_Touchscreen_Driver
 ```
 ## Setting up a Python Client
 
@@ -70,3 +75,10 @@ pip3 install grpcio-tools
 ## Work in Progress
 No support is offered at the moment for the code because it's still in development. We will update this when it's ready to use
 
+## TODO 
+We are working on the following:
+
+Support for other file types
+Adding keyboard and pin entry screens
+Creating an online web app for generating screens
+Allowing remote administration of images and screens

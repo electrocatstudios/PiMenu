@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/ajstarks/openvg"
+	touchscreen "github.com/electrocatstudios/FTXXXX_Touchscreen_Driver"
 	"github.com/electrocatstudios/PiMenu/screenservice"
 	"google.golang.org/grpc"
 )
@@ -96,7 +97,7 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	}
 }
 
-func HandleTouches(t *TouchScreen, input Screen, defaultScreen string) string {
+func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen string) string {
 	numTouches, err := t.GetTouchesCount()
 	if err != nil {
 		fmt.Println(err)
@@ -152,7 +153,7 @@ func HandleTouches(t *TouchScreen, input Screen, defaultScreen string) string {
 }
 
 /*return new screen based on touches if appropriate*/
-func DrawScreen(t *TouchScreen, name string, input Screen, s ScreenDetails) string {
+func DrawScreen(t *touchscreen.TouchScreen, name string, input Screen, s ScreenDetails) string {
 
 	openvg.Start(s.Width, s.Height)      // Start the picture
 	openvg.BackgroundColor("black")      // Black background
@@ -258,8 +259,10 @@ func main() {
 	screenDetails.Width, screenDetails.Height = openvg.Init()
 	screenDetails.W2 = openvg.VGfloat(screenDetails.Width / 2) // this is to center lines of text
 
-	t := TouchScreen{nil, false, time.Now()}
-	t.Init()
+	t := touchscreen.TouchScreen{}
+	t.Init(touchscreen.FT62XX)
+
+	t.Debug = true
 
 	go runInterruptServer()
 
