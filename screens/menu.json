@@ -1,24 +1,32 @@
 {
     "name": "menu",
+    "background":{
+       "color": "rgb(60,0,0)"
+    },
     "Line1": {
         "type": "image",
-        "value": "110;210;100;100;icons/photo_collection.png"
+        "value": "110;210;100;100;icons/photo_collection.png",
+        "color": ""
     },
     "Line2": {
         "type": "image",
-        "value": "400;210;100;100;icons/target.png"
+        "value": "400;210;100;100;icons/target.png",
+        "color": ""
     },
     "Line3": {
         "type": "null",
-        "value": ""
+        "value": "",
+        "color": ""
     },
     "Line4": {
         "type": "null",
-        "value": ""
+        "value": "",
+        "color": ""
     },
     "Line5": {
         "type": "data",
-        "value": "TIME"
+        "value": "TIME",
+        "color": ""
     },
     "timeout": {
         "length": 10,

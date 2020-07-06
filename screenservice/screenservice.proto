@@ -5,6 +5,7 @@ package screenservice;
 message Line {
   string line_type = 1;
   string line_value = 2;
+  string line_color = 3;
 }
 
 message Timeout {
@@ -26,6 +27,10 @@ message Touch {
   Command command = 5;
 }
 
+message Background {
+  string color = 1;
+}
+
 message ScreenRequest {
   Line line1 = 1;
   Line line2 = 2;
@@ -34,6 +39,7 @@ message ScreenRequest {
   Line line5 = 5;
   Timeout timeout = 6;
   repeated Touch touches=7;
+  Background background = 8;
 }
 
 message ScreenResponse {

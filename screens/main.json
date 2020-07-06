@@ -1,8 +1,12 @@
 {
     "name": "main",
+    "background":{
+        "color": "rgb(22,22,22)"
+    },
     "Line1": {
         "type": "text",
-        "value": "Example Text On Screen"
+        "value": "Example Text On Screen",
+        "color": "rgb(128,128,255)"
     },
     "Line2": {
         "type": "text",

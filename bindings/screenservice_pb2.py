@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='screenservice.proto',
   package='screenservice',
   syntax='proto3',
-  serialized_pb=_b('\n\x13screenservice.proto\x12\rscreenservice\"-\n\x04Line\x12\x11\n\tline_type\x18\x01 \x01(\t\x12\x12\n\nline_value\x18\x02 \x01(\t\"D\n\x07Timeout\x12\x0e\n\x06length\x18\x01 \x01(\x05\x12\x13\n\x0bshowtimeout\x18\x02 \x01(\x05\x12\x14\n\x0creturnscreen\x18\x03 \x01(\t\"4\n\x07\x43ommand\x12\x13\n\x0b\x63ommandtype\x18\x01 \x01(\t\x12\x14\n\x0c\x63ommandvalue\x18\x02 \x01(\t\"e\n\x05Touch\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\r\n\x05width\x18\x03 \x01(\x05\x12\x0e\n\x06height\x18\x04 \x01(\x05\x12\'\n\x07\x63ommand\x18\x05 \x01(\x0b\x32\x16.screenservice.Command\"\x93\x02\n\rScreenRequest\x12\"\n\x05line1\x18\x01 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line2\x18\x02 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line3\x18\x03 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line4\x18\x04 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line5\x18\x05 \x01(\x0b\x32\x13.screenservice.Line\x12\'\n\x07timeout\x18\x06 \x01(\x0b\x32\x16.screenservice.Timeout\x12%\n\x07touches\x18\x07 \x03(\x0b\x32\x14.screenservice.Touch\"1\n\x0eScreenResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\"O\n\x0bScreenImage\x12\x12\n\nimage_data\x18\x01 \x01(\x0c\x12\x0e\n\x06height\x18\x02 \x01(\x05\x12\r\n\x05width\x18\x03 \x01(\x05\x12\r\n\x05\x66rame\x18\x04 \x01(\x03\x32\xa5\x01\n\x0cScreenServer\x12K\n\nSendScreen\x12\x1c.screenservice.ScreenRequest\x1a\x1d.screenservice.ScreenResponse\"\x00\x12H\n\tSendImage\x12\x1a.screenservice.ScreenImage\x1a\x1d.screenservice.ScreenResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x13screenservice.proto\x12\rscreenservice\"A\n\x04Line\x12\x11\n\tline_type\x18\x01 \x01(\t\x12\x12\n\nline_value\x18\x02 \x01(\t\x12\x12\n\nline_color\x18\x03 \x01(\t\"D\n\x07Timeout\x12\x0e\n\x06length\x18\x01 \x01(\x05\x12\x13\n\x0bshowtimeout\x18\x02 \x01(\x05\x12\x14\n\x0creturnscreen\x18\x03 \x01(\t\"4\n\x07\x43ommand\x12\x13\n\x0b\x63ommandtype\x18\x01 \x01(\t\x12\x14\n\x0c\x63ommandvalue\x18\x02 \x01(\t\"e\n\x05Touch\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\r\n\x05width\x18\x03 \x01(\x05\x12\x0e\n\x06height\x18\x04 \x01(\x05\x12\'\n\x07\x63ommand\x18\x05 \x01(\x0b\x32\x16.screenservice.Command\"\x1b\n\nBackground\x12\r\n\x05\x63olor\x18\x01 \x01(\t\"\xc2\x02\n\rScreenRequest\x12\"\n\x05line1\x18\x01 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line2\x18\x02 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line3\x18\x03 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line4\x18\x04 \x01(\x0b\x32\x13.screenservice.Line\x12\"\n\x05line5\x18\x05 \x01(\x0b\x32\x13.screenservice.Line\x12\'\n\x07timeout\x18\x06 \x01(\x0b\x32\x16.screenservice.Timeout\x12%\n\x07touches\x18\x07 \x03(\x0b\x32\x14.screenservice.Touch\x12-\n\nbackground\x18\x08 \x01(\x0b\x32\x19.screenservice.Background\"1\n\x0eScreenResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\"O\n\x0bScreenImage\x12\x12\n\nimage_data\x18\x01 \x01(\x0c\x12\x0e\n\x06height\x18\x02 \x01(\x05\x12\r\n\x05width\x18\x03 \x01(\x05\x12\r\n\x05\x66rame\x18\x04 \x01(\x03\x32\xa5\x01\n\x0cScreenServer\x12K\n\nSendScreen\x12\x1c.screenservice.ScreenRequest\x1a\x1d.screenservice.ScreenResponse\"\x00\x12H\n\tSendImage\x12\x1a.screenservice.ScreenImage\x1a\x1d.screenservice.ScreenResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -46,6 +46,13 @@ _LINE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='line_color', full_name='screenservice.Line.line_color', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -59,7 +66,7 @@ _LINE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=38,
-  serialized_end=83,
+  serialized_end=103,
 )
 
 
@@ -103,8 +110,8 @@ _TIMEOUT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=85,
-  serialized_end=153,
+  serialized_start=105,
+  serialized_end=173,
 )
 
 
@@ -141,8 +148,8 @@ _COMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=155,
-  serialized_end=207,
+  serialized_start=175,
+  serialized_end=227,
 )
 
 
@@ -200,8 +207,39 @@ _TOUCH = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=209,
-  serialized_end=310,
+  serialized_start=229,
+  serialized_end=330,
+)
+
+
+_BACKGROUND = _descriptor.Descriptor(
+  name='Background',
+  full_name='screenservice.Background',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='color', full_name='screenservice.Background.color', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=332,
+  serialized_end=359,
 )
 
 
@@ -261,6 +299,13 @@ _SCREENREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='background', full_name='screenservice.ScreenRequest.background', index=7,
+      number=8, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -273,8 +318,8 @@ _SCREENREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=313,
-  serialized_end=588,
+  serialized_start=362,
+  serialized_end=684,
 )
 
 
@@ -311,8 +356,8 @@ _SCREENRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=590,
-  serialized_end=639,
+  serialized_start=686,
+  serialized_end=735,
 )
 
 
@@ -363,8 +408,8 @@ _SCREENIMAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=641,
-  serialized_end=720,
+  serialized_start=737,
+  serialized_end=816,
 )
 
 _TOUCH.fields_by_name['command'].message_type = _COMMAND
@@ -375,10 +420,12 @@ _SCREENREQUEST.fields_by_name['line4'].message_type = _LINE
 _SCREENREQUEST.fields_by_name['line5'].message_type = _LINE
 _SCREENREQUEST.fields_by_name['timeout'].message_type = _TIMEOUT
 _SCREENREQUEST.fields_by_name['touches'].message_type = _TOUCH
+_SCREENREQUEST.fields_by_name['background'].message_type = _BACKGROUND
 DESCRIPTOR.message_types_by_name['Line'] = _LINE
 DESCRIPTOR.message_types_by_name['Timeout'] = _TIMEOUT
 DESCRIPTOR.message_types_by_name['Command'] = _COMMAND
 DESCRIPTOR.message_types_by_name['Touch'] = _TOUCH
+DESCRIPTOR.message_types_by_name['Background'] = _BACKGROUND
 DESCRIPTOR.message_types_by_name['ScreenRequest'] = _SCREENREQUEST
 DESCRIPTOR.message_types_by_name['ScreenResponse'] = _SCREENRESPONSE
 DESCRIPTOR.message_types_by_name['ScreenImage'] = _SCREENIMAGE
@@ -412,6 +459,13 @@ Touch = _reflection.GeneratedProtocolMessageType('Touch', (_message.Message,), d
   ))
 _sym_db.RegisterMessage(Touch)
 
+Background = _reflection.GeneratedProtocolMessageType('Background', (_message.Message,), dict(
+  DESCRIPTOR = _BACKGROUND,
+  __module__ = 'screenservice_pb2'
+  # @@protoc_insertion_point(class_scope:screenservice.Background)
+  ))
+_sym_db.RegisterMessage(Background)
+
 ScreenRequest = _reflection.GeneratedProtocolMessageType('ScreenRequest', (_message.Message,), dict(
   DESCRIPTOR = _SCREENREQUEST,
   __module__ = 'screenservice_pb2'
@@ -441,8 +495,8 @@ _SCREENSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=723,
-  serialized_end=888,
+  serialized_start=819,
+  serialized_end=984,
   methods=[
   _descriptor.MethodDescriptor(
     name='SendScreen',

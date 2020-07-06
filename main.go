@@ -22,6 +22,11 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 		// Nothing to do here - just leave blank
 		return
 	} else if dl.Type == "text" {
+		if dl.Color != "" {
+			openvg.FillColor(dl.Color)
+		} else {
+			openvg.FillColor("rgb(255,255,255)")
+		}
 		openvg.TextMid(s.W2, offset, dl.Value, "sans", 30)
 	} else if dl.Type == "data" {
 		if dl.Value == "IMAGESERVER" {
@@ -39,6 +44,11 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 			}
 			interruptScreen.Lock.Unlock()
 		} else {
+			if dl.Color != "" {
+				openvg.FillColor(dl.Color)
+			} else {
+				openvg.FillColor("rgb(255,255,255)")
+			}
 			dataString := GetDataString(dl.Value)
 			openvg.TextMid(s.W2, offset, dataString, "sans", 30)
 		}
@@ -155,9 +165,16 @@ func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen strin
 /*return new screen based on touches if appropriate*/
 func DrawScreen(t *touchscreen.TouchScreen, name string, input Screen, s ScreenDetails) string {
 
-	openvg.Start(s.Width, s.Height)      // Start the picture
-	openvg.BackgroundColor("black")      // Black background
+	openvg.Start(s.Width, s.Height) // Start the picture
+	if input.Background.Color != "" {
+		openvg.BackgroundColor(input.Background.Color)
+	} else {
+		openvg.BackgroundColor("black")
+	}
+
+	// Default fill color
 	openvg.FillColor("rgb(255,255,255)") // White text
+
 	DrawLine(s, input.Line1, 400)
 	DrawLine(s, input.Line2, 320)
 	DrawLine(s, input.Line3, 240)
@@ -176,42 +193,8 @@ func monitorService(s *screenservice.Server) {
 	// Listen for incoming screens on the buffer
 	for {
 		if s.NumScreens() != 0 {
-			fmt.Println("Found screen")
 			screen := s.GetScreen()
-			var newScreen Screen
-			if screen.Line1 != nil {
-				newScreen.Line1 = DisplayLine{Type: screen.Line1.LineType, Value: screen.Line1.LineValue}
-			}
-
-			if screen.Line2 != nil {
-				newScreen.Line2 = DisplayLine{Type: screen.Line2.LineType, Value: screen.Line2.LineValue}
-			}
-
-			if screen.Line3 != nil {
-				newScreen.Line3 = DisplayLine{Type: screen.Line3.LineType, Value: screen.Line3.LineValue}
-			}
-
-			if screen.Line4 != nil {
-				newScreen.Line4 = DisplayLine{Type: screen.Line4.LineType, Value: screen.Line4.LineValue}
-			}
-
-			if screen.Line5 != nil {
-				newScreen.Line5 = DisplayLine{Type: screen.Line5.LineType, Value: screen.Line5.LineValue}
-			}
-
-			if screen.Timeout != nil {
-				newScreen.Timeout = Timeout{Length: int(screen.Timeout.Length), ShowCountDown: int(screen.Timeout.Showtimeout), ReturnScreen: screen.Timeout.Returnscreen}
-			}
-
-			if screen.Touches != nil {
-				for _, touch := range screen.Touches {
-					var newCommand CommandDetails
-					newCommand.Type = touch.Command.Commandtype
-					newCommand.Value = touch.Command.Commandvalue
-
-					newScreen.Touches = append(newScreen.Touches, TouchDetails{X: int(touch.X), Y: int(touch.Y), Width: int(touch.Width), Height: int(touch.Height), Command: newCommand})
-				}
-			}
+			newScreen := GetScreenFromScreenRequest(screen)
 
 			interruptScreen.Lock.Lock()
 			if len(interruptScreen.Screens) == 0 {

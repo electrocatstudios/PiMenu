@@ -13,17 +13,19 @@ import (
 	"time"
 
 	"github.com/ajstarks/openvg"
+	"github.com/electrocatstudios/PiMenu/screenservice"
 )
 
 type Screen struct {
-	Name    string         `json:"name"`
-	Line1   DisplayLine    `json:"line1"`
-	Line2   DisplayLine    `json:"line2"`
-	Line3   DisplayLine    `json:"line3"`
-	Line4   DisplayLine    `json:"line4"`
-	Line5   DisplayLine    `json:"line5"`
-	Timeout Timeout        `json:"timeout"`
-	Touches []TouchDetails `json:"touches"`
+	Name       string            `json:"name"`
+	Background BackgroundDetails `json:"background"`
+	Line1      DisplayLine       `json:"line1"`
+	Line2      DisplayLine       `json:"line2"`
+	Line3      DisplayLine       `json:"line3"`
+	Line4      DisplayLine       `json:"line4"`
+	Line5      DisplayLine       `json:"line5"`
+	Timeout    Timeout           `json:"timeout"`
+	Touches    []TouchDetails    `json:"touches"`
 }
 
 type ScreenDetails struct {
@@ -49,6 +51,11 @@ type CommandDetails struct {
 type DisplayLine struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
+	Color string `json:"color"`
+}
+
+type BackgroundDetails struct {
+	Color string `json:"color"`
 }
 
 type Timeout struct {
@@ -123,4 +130,47 @@ func GetImageFromString(input string) (PMImage, error) {
 	ret.Height = height
 	ret.Filename = pieceArray[4]
 	return ret, nil
+}
+
+func GetScreenFromScreenRequest(screen *screenservice.ScreenRequest) Screen {
+	var newScreen Screen
+	if screen.Line1 != nil {
+		newScreen.Line1 = DisplayLine{Type: screen.Line1.LineType, Value: screen.Line1.LineValue, Color: screen.Line1.LineColor}
+	}
+
+	if screen.Line2 != nil {
+		newScreen.Line2 = DisplayLine{Type: screen.Line2.LineType, Value: screen.Line2.LineValue, Color: screen.Line2.LineColor}
+	}
+
+	if screen.Line3 != nil {
+		newScreen.Line3 = DisplayLine{Type: screen.Line3.LineType, Value: screen.Line3.LineValue, Color: screen.Line3.LineColor}
+	}
+
+	if screen.Line4 != nil {
+		newScreen.Line4 = DisplayLine{Type: screen.Line4.LineType, Value: screen.Line4.LineValue, Color: screen.Line4.LineColor}
+	}
+
+	if screen.Line5 != nil {
+		newScreen.Line5 = DisplayLine{Type: screen.Line5.LineType, Value: screen.Line5.LineValue, Color: screen.Line5.LineColor}
+	}
+
+	if screen.Timeout != nil {
+		newScreen.Timeout = Timeout{Length: int(screen.Timeout.Length), ShowCountDown: int(screen.Timeout.Showtimeout), ReturnScreen: screen.Timeout.Returnscreen}
+	}
+
+	if screen.Touches != nil {
+		for _, touch := range screen.Touches {
+			var newCommand CommandDetails
+			newCommand.Type = touch.Command.Commandtype
+			newCommand.Value = touch.Command.Commandvalue
+
+			newScreen.Touches = append(newScreen.Touches, TouchDetails{X: int(touch.X), Y: int(touch.Y), Width: int(touch.Width), Height: int(touch.Height), Command: newCommand})
+		}
+	}
+
+	if screen.Background != nil {
+		newScreen.Background = BackgroundDetails{Color: screen.Background.Color}
+	}
+
+	return newScreen
 }
