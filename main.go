@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ajstarks/openvg"
@@ -107,6 +109,24 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	}
 }
 
+func RunCommand(cmd string, wait bool) error {
+	cmd_items := strings.Split(cmd, " ")
+	cmd_exec := exec.Command(cmd_items[0], strings.Join(cmd_items[1:], " "))
+	err := cmd_exec.Start()
+	if err != nil {
+		fmt.Printf("Failed to start command : %s\n", err)
+		return err
+	}
+	if wait {
+		err = cmd_exec.Wait()
+		if err != nil {
+			fmt.Printf("Failed to execute command: %s\n", err)
+		}
+	}
+
+	return err
+}
+
 func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen string) string {
 	numTouches, err := t.GetTouchesCount()
 	if err != nil {
@@ -152,11 +172,19 @@ func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen strin
 
 				if hitBox.Command.Type == "menu" {
 					return hitBox.Command.Value
+				} else if hitBox.Command.Type == "command" {
+					err := RunCommand(hitBox.Command.Value, false)
+					if err != nil {
+						return defaultScreen
+					}
+					if hitBox.Command.ReturnScreen != "" {
+						return hitBox.Command.ReturnScreen
+					} else {
+						return defaultScreen
+					}
 				}
-
 			}
 		}
-
 	}
 
 	return defaultScreen

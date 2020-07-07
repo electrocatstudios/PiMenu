@@ -44,8 +44,9 @@ type TouchDetails struct {
 }
 
 type CommandDetails struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
+	Type         string `json:"type"`
+	Value        string `json:"value"`
+	ReturnScreen string `json:"returnScreen"`
 }
 
 type DisplayLine struct {

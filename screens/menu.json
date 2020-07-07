@@ -50,8 +50,9 @@
             "width": 145,
             "height": 150,
             "command": {
-                "type": "menu",
-                "value": "incomingimage"
+                "type": "command",
+                "value": "python3 /home/pi/go/src/github.com/electrocatstudios/PiMenu/python_client_example/postScreen.py",
+                "returnScreen": "confirmation"
             }
         }
     ]   
