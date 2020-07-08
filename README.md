@@ -4,14 +4,24 @@ Make Raspberry Pi Menus easily to display on a screen. Note: This needs to be co
 ## Running the application
 In the release folder you will find a binary (called Menecs) which is the main application. You'll need to customise the json files in the screens folder (and the folder will need to be next to the binary, along with the images folder). You'll also need to install and run the fbcp application https://github.com/juj/fbcp-ili9341. Every time a screen is changed the json file is reread so you can hot-swap json files. 
 
+## Setting up the application as a service to start on startup
+You will need to create a folder `/home/pi/menecs/` and copy the binary into this folder as well as creating an images folder and a screens folder. (Copying the ones from this project will help you get started quickly). Also add the file `service/pimenu.service` to this folder. Then run the following commands:
+
+```
+sudo cp pimenu.service /etc/systemd/system/pimenu.service
+sudo systemctl enable pimenu.service
+sudo systemctl start pimenu.service
+```
+
+
 ## Prerequisites for development
 You'll need to install the following prerequisites before getting the OpenVG library
 
 ```
-sudo apt install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core -y
-sudo apt install libraspberrypi-dev raspberrypi-kernel-headers -y
-sudo apt install golang-google-grpc-dev -y
-sudo apt install python3-grpcio python3-grpc-tools python3-protobuf -y
+sudo apt install -y libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core
+sudo apt install -y libraspberrypi-dev raspberrypi-kernel-headers
+sudo apt install -y golang-google-grpc-dev
+sudo apt install -y python3-grpcio python3-grpc-tools python3-protobuf
 sudo apt install -y libavdevice-dev libavfilter-dev libswscale-dev libavcodec-dev libavformat-dev libswresample-dev libavutil-dev
 ```
 
