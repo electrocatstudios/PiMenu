@@ -11,6 +11,9 @@ if __name__ == "__main__":
 
     payload.line1.line_type = "text" 
     payload.line1.line_value =  "another message sent"
+ 
+    payload.line2.line_type = "gif"
+    payload.line2.line_value = "0;0;0;0;gifs/cat.gif"
 
     payload.timeout.length = 10
     payload.timeout.showtimeout = 5

@@ -1,0 +1,15 @@
+[Unit]
+Description=PiMenu Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/home/pi/menecs
+ExecStart=/home/pi/menecs/Menecs
+
+[Install]
+WantedBy=multi-user.target

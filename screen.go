@@ -44,8 +44,9 @@ type TouchDetails struct {
 }
 
 type CommandDetails struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
+	Type         string `json:"type"`
+	Value        string `json:"value"`
+	ReturnScreen string `json:"returnScreen"`
 }
 
 type DisplayLine struct {
@@ -55,7 +56,9 @@ type DisplayLine struct {
 }
 
 type BackgroundDetails struct {
-	Color string `json:"color"`
+	Color   string `json:"color"`
+	FadeIn  bool   `json:"fadeIn"`
+	FadeOut bool   `json:"fadeOut"`
 }
 
 type Timeout struct {

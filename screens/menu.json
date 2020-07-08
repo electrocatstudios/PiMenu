@@ -1,7 +1,9 @@
 {
     "name": "menu",
     "background":{
-       "color": "rgb(60,0,0)"
+       "color": "rgb(60,0,0)",
+       "fadeIn": true,
+       "fadeOut": true
     },
     "Line1": {
         "type": "image",
@@ -50,8 +52,9 @@
             "width": 145,
             "height": 150,
             "command": {
-                "type": "menu",
-                "value": "incomingimage"
+                "type": "command",
+                "value": "python3 /home/pi/go/src/github.com/electrocatstudios/PiMenu/python_client_example/postScreen.py",
+                "returnScreen": "confirmation"
             }
         }
     ]   

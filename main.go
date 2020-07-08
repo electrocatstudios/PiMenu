@@ -2,9 +2,14 @@ package main
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"image/draw"
 	"log"
 	"net"
+	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ajstarks/openvg"
@@ -17,7 +22,14 @@ var cur_screen = "main"
 var imageCache PMImageCache
 var interruptScreen InterruptScreen
 
-func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
+func GetImageWithOpacity(img image.Image, opacity uint8) image.Image {
+	m := image.NewRGBA(img.Bounds())
+	mask := image.NewUniform(color.Alpha{opacity})
+	draw.DrawMask(m, m.Bounds(), img, image.Point{0, 0}, mask, image.Point{0, 0}, draw.Over)
+	return m
+}
+
+func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat, opacity *uint8) {
 	if dl.Type == "null" || dl.Type == "" {
 		// Nothing to do here - just leave blank
 		return
@@ -83,7 +95,15 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 			left = openvg.VGfloat(s.W2 - (image_width / 2))
 		}
 
-		openvg.Img(left, top, image_file)
+		if opacity != nil && *opacity >= uint8(5) {
+			img_op := GetImageWithOpacity(image_file, *opacity)
+			openvg.Img(left, top, img_op)
+		} else if opacity != nil && *opacity < uint8(5) {
+			// Don't draw if less than 5 opacity - should be nearly invisible
+		} else {
+			openvg.Img(left, top, image_file)
+		}
+
 	} else if dl.Type == "gif" {
 		img, err := GetImageFromString(dl.Value)
 		if err != nil {
@@ -107,38 +127,74 @@ func DrawLine(s ScreenDetails, dl DisplayLine, offset openvg.VGfloat) {
 	}
 }
 
-func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen string) string {
+func RunCommand(cmd string, wait bool) error {
+	cmd_items := strings.Split(cmd, " ")
+	cmd_exec := exec.Command(cmd_items[0], strings.Join(cmd_items[1:], " "))
+	err := cmd_exec.Start()
+	if err != nil {
+		fmt.Printf("Failed to start command : %s\n", err)
+		return err
+	}
+	if wait {
+		err = cmd_exec.Wait()
+		if err != nil {
+			fmt.Printf("Failed to execute command: %s\n", err)
+		}
+	}
+
+	return err
+}
+
+func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen string) (string, *uint8) {
 	numTouches, err := t.GetTouchesCount()
 	if err != nil {
 		fmt.Println(err)
-		return defaultScreen
+		return defaultScreen, nil
 	}
+
 	if numTouches < 1 {
 		if input.Timeout.Length == 0 {
 			// We don't have a time out so just return
-			return defaultScreen
+			return defaultScreen, nil
 		}
 
 		// See if we have timed out since last touch
 		curTime := time.Now()
 		diff := curTime.Sub(t.LastScreenChange).Seconds()
 
-		remain := input.Timeout.Length - int(diff)
+		remain := float64(input.Timeout.Length) - diff
 
 		if int(remain) < 0 {
 			t.LastScreenChange = time.Now()
 			// We have timed out so return to previous screen
-			return input.Timeout.ReturnScreen
+			ret_op := uint8(0)
+			return input.Timeout.ReturnScreen, &ret_op
 		}
 
-		if remain < input.Timeout.ShowCountDown {
+		if remain < float64(input.Timeout.ShowCountDown) && input.Timeout.ShowCountDown != 0 {
 			seconds_remain := strconv.FormatInt(int64(remain), 10)
 			seconds_remain += "s"
 
+			openvg.FillColor("rgb(255,255,255)")
 			openvg.Text(10, 420, seconds_remain, "sans", 30)
 
 		}
-		return defaultScreen
+
+		// Apply opacity if appropriate
+		if input.Background.FadeOut && remain < 0 {
+			// Opacity should be zero while we load the new screen
+			opacity := uint8(0)
+			return defaultScreen, &opacity
+		} else if remain < 1 && input.Background.FadeOut {
+			opacity := uint8(255 * remain)
+			return defaultScreen, &opacity
+		} else if diff < 1 && input.Background.FadeIn {
+			opacity := uint8(255 * diff)
+			return defaultScreen, &opacity
+		} else {
+			return defaultScreen, nil
+		}
+
 	}
 
 	t.LastScreenChange = time.Now()
@@ -151,15 +207,23 @@ func HandleTouches(t *touchscreen.TouchScreen, input Screen, defaultScreen strin
 			if touch.Y > hitBox.Y && touch.Y < hitBox.Y+hitBox.Height {
 
 				if hitBox.Command.Type == "menu" {
-					return hitBox.Command.Value
+					return hitBox.Command.Value, nil
+				} else if hitBox.Command.Type == "command" {
+					err := RunCommand(hitBox.Command.Value, false)
+					if err != nil {
+						return defaultScreen, nil
+					}
+					if hitBox.Command.ReturnScreen != "" {
+						return hitBox.Command.ReturnScreen, nil
+					} else {
+						return defaultScreen, nil
+					}
 				}
-
 			}
 		}
-
 	}
 
-	return defaultScreen
+	return defaultScreen, nil
 }
 
 /*return new screen based on touches if appropriate*/
@@ -172,17 +236,16 @@ func DrawScreen(t *touchscreen.TouchScreen, name string, input Screen, s ScreenD
 		openvg.BackgroundColor("black")
 	}
 
+	ret, opacity := HandleTouches(t, input, name)
+
 	// Default fill color
 	openvg.FillColor("rgb(255,255,255)") // White text
 
-	DrawLine(s, input.Line1, 400)
-	DrawLine(s, input.Line2, 320)
-	DrawLine(s, input.Line3, 240)
-	DrawLine(s, input.Line4, 160)
-	DrawLine(s, input.Line5, 80)
-
-	var ret string
-	ret = HandleTouches(t, input, name)
+	DrawLine(s, input.Line1, 400, opacity)
+	DrawLine(s, input.Line2, 320, opacity)
+	DrawLine(s, input.Line3, 240, opacity)
+	DrawLine(s, input.Line4, 160, opacity)
+	DrawLine(s, input.Line5, 80, opacity)
 
 	openvg.End()
 
