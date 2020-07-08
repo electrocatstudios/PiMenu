@@ -1,5 +1,10 @@
 {
     "name": "photo1",
+    "background": {
+        "color": "rgb(0,0,0)",
+        "fadeIn": true,
+        "fadeOut": true
+    },
     "Line1": {
         "type": "image",
         "value": "0;0;0;0;photos/forest.jpeg"

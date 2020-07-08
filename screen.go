@@ -56,7 +56,9 @@ type DisplayLine struct {
 }
 
 type BackgroundDetails struct {
-	Color string `json:"color"`
+	Color   string `json:"color"`
+	FadeIn  bool   `json:"fadeIn"`
+	FadeOut bool   `json:"fadeOut"`
 }
 
 type Timeout struct {

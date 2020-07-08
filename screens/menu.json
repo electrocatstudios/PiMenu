@@ -1,7 +1,9 @@
 {
     "name": "menu",
     "background":{
-       "color": "rgb(60,0,0)"
+       "color": "rgb(60,0,0)",
+       "fadeIn": true,
+       "fadeOut": true
     },
     "Line1": {
         "type": "image",
