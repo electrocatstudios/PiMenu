@@ -7,6 +7,7 @@ import (
 	"image/draw"
 	"log"
 	"net"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -298,6 +299,20 @@ func runInterruptServer() {
 	}
 }
 
+func CheckFolders() bool {
+	// Check if screens and images folders exist - offer to download default screens
+	folder := "screens"
+	if _, err := os.Stat(folder); os.IsNotExist(err) {
+		return false
+	}
+	folder = "images"
+	if _, err := os.Stat(folder); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}
+
 func main() {
 	fmt.Println("Starting Screen App")
 
@@ -309,6 +324,13 @@ func main() {
 	t.Init(touchscreen.FT62XX)
 
 	t.Debug = true
+
+	bFoldersExist := CheckFolders()
+	if !bFoldersExist {
+		// Note this is a blocking call - nothing else will be available
+		RunFirstTimeScreen(screenDetails, &t)
+		return
+	}
 
 	go runInterruptServer()
 
