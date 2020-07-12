@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
+	"os"
 	"time"
 )
 
@@ -31,11 +34,37 @@ func GetLocalIP() string {
 	return "Unknown"
 }
 
+type Version struct {
+	Major    int `json:"major"`
+	Minor    int `json:"minor"`
+	Revision int `json:"revision"`
+}
+
+func GetVersion() string {
+
+	filename := fmt.Sprintf("version.json")
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		return "Version: Unknown"
+	}
+
+	file, _ := ioutil.ReadFile(filename)
+	var ver Version
+	err := json.Unmarshal([]byte(file), &ver)
+	if err != nil {
+		return "Version: Error"
+	}
+	var ret string
+	ret = fmt.Sprintf("Version: %i.%i.%i", ver.Major, ver.Minor, ver.Revision)
+	return ret
+}
+
 func GetDataString(sourceName string) string {
 	if sourceName == "TIME" {
 		return GetTimeString()
 	} else if sourceName == "IPADDRESS" {
 		return GetLocalIP()
+	} else if sourceName == "VERSION" {
+		return GetVersion()
 	} else {
 		return "No data source for " + sourceName
 	}
