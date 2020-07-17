@@ -333,6 +333,7 @@ func main() {
 	}
 
 	go runInterruptServer()
+	go RunWebserver()
 
 	var prevscreen string
 	var screen Screen
